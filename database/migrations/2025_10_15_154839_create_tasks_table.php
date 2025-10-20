@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->dateTime('assignment_date')->useCurrent();// auto-set
-            $table->dateTime('deadline');
+            $table->dateTime('deadline')->default(now());
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
