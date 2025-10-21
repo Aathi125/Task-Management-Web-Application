@@ -51,12 +51,14 @@ class TaskController extends Controller
     {
             // Validate the incoming request
         $data = $request->validate([
-            'name' => 'required|string|max:150',
-            'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-            'deadline' => 'required|date|after:now',
-            'status' => 'required|in:Pending,In-Progress,Completed',
-            'user_id' => 'required|exists:users,id', // Ensure user_id is provided
+            'name'        => ['required', 'string', 'max:150'],
+            'description' => ['nullable', 'string'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'user_id'     => ['required', 'exists:users,id'],// Ensure user_id is provided
+            'deadline'    => ['required', 'date', 'after:now'],
+            'status'      => ['required', 'in:Pending,In-Progress,Completed'],
+
+
             ]);
 
         // If normal user, force self-assignment
