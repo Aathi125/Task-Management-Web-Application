@@ -15,23 +15,23 @@ class TaskController extends Controller
      */
     public function index()
     {
-       // Base query: get only user's tasks if not admin
-    $query = Task::with(['category', 'user'])
-        ->when(auth()->user()->role !== 'admin', fn($q) => $q->where('user_id', auth()->id()))
-        ->latest();
+        // Base query: get only user's tasks if not admin
+        $query = Task::with(['category', 'user'])
+            ->when(auth()->user()->role !== 'admin', fn($q) => $q->where('user_id', auth()->id()))
+            ->latest();
 
-    // Clone query for counts
-    $baseQuery = clone $query;
+        // Clone query for counts
+        $baseQuery = clone $query;
 
-    // Count totals safely — if no tasks exist, it’ll return 0 automatically
-    $totalTasks = (clone $baseQuery)->count();
-    $completedTasks = (clone $baseQuery)->where('status', 'Completed')->count();
-    $pendingTasks = (clone $baseQuery)->where('status', 'Pending')->count();
+        // Count totals safely — if no tasks exist, it’ll return 0 automatically
+        $totalTasks = (clone $baseQuery)->count();
+        $completedTasks = (clone $baseQuery)->where('status', 'Completed')->count();
+        $pendingTasks = (clone $baseQuery)->where('status', 'Pending')->count();
 
-    // Get paginated results
-    $tasks = $query->paginate(10);
+        // Get paginated results
+        $tasks = $query->paginate(10);
 
-    return view('tasks.index', compact('tasks', 'totalTasks', 'completedTasks', 'pendingTasks'));
+        return view('tasks.index', compact('tasks', 'totalTasks', 'completedTasks', 'pendingTasks'));
     }
 
     /**
@@ -51,14 +51,12 @@ class TaskController extends Controller
     {
             // Validate the incoming request
         $data = $request->validate([
-            'name'        => ['required', 'string', 'max:150'],
-            'description' => ['nullable', 'string'],
-            'category_id' => ['required', 'exists:categories,id'],
-            'user_id'     => ['required', 'exists:users,id'],// Ensure user_id is provided
-            'deadline'    => ['required', 'date', 'after:now'],
-            'status'      => ['required', 'in:Pending,In-Progress,Completed'],
-
-
+            'name' => 'required|string|max:150',
+            'description' => 'nullable|string',
+            'category_id' => 'required|exists:categories,id',
+            'deadline' => 'required|date|after:now',
+            'status' => 'required|in:Pending,In-Progress,Completed',
+            'user_id' => 'required|exists:users,id', // Ensure user_id is provided
             ]);
 
         // If normal user, force self-assignment
@@ -96,16 +94,25 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $data = $request->validate([
+        // Validate common fields first
+        $rules = [
             'name' => 'required|string|max:150',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'deadline' => 'required|date|after:now',
             'status' => 'required|in:Pending,In-Progress,Completed',
-            'user_id' => 'required|exists:users,id'
-        ]);
+        ];
+
+        // Only require user_id if admin
+        if (auth()->user()->role === 'admin') {
+            $rules['user_id'] = 'required|exists:users,id';
+        }
+
+        $data = $request->validate($rules);
+
 
         $task->update($data);
+
         return redirect()->route('tasks.index')->with('ok', 'Task updated');
     }
 

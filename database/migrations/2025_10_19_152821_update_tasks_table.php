@@ -15,9 +15,7 @@ return new class extends Migration
             // Add an 'enum' status column with default value
             $table->enum('status', ['Pending', 'In-Progress', 'Completed'])->default('Pending')->after('deadline');
             // Assigned user
-            $table->foreignId('user_id')->nullable()->index();
-
-
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
         });
     }
