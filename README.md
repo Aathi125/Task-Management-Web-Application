@@ -130,7 +130,7 @@ It demonstrates practical implementation of:
 ### 👨‍💻 Developer Information
 
 Developed by: Aathika Ilmudeen
-🎓 BSc (Hons) in Information Technology – Sri Lanka Institute of Information Technology (SLIIT)
-💼 Intern – Software Engineer
-🌐 Project: TaskMate – Laravel Task Management System
-💡 Passionate about: Laravel, TailwindCSS, and scalable web solutions.
+- 🎓 BSc (Hons) in Information Technology – Sri Lanka Institute of Information Technology (SLIIT)
+- 💼 Intern – Software Engineer
+- 🌐 Project: TaskMate – Laravel Task Management System
+- 💡 Passionate about: Laravel, TailwindCSS, and scalable web solutions.
