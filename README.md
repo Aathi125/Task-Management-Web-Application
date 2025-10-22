@@ -75,7 +75,7 @@ php artisan migrate --seed
 php artisan serve
 ```
 ---
-Now open your browser and visit 👉 http://localhost:8000
+#### Now open your browser and visit 👉 http://localhost:8000
 ---
 ### 🧩 Folder Structure
 ```bash
